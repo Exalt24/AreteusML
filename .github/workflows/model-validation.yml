@@ -1,0 +1,58 @@
+name: Model Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_version:
+        description: "Model version to validate and promote"
+        required: true
+        type: string
+
+jobs:
+  validate-and-promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run model validation tests
+        run: uv run pytest ml/tests/ -m "not slow and not gpu" -v
+
+      - name: Validate model metrics
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MODEL_VERSION: ${{ github.event.inputs.model_version }}
+        run: |
+          uv run python -m ml.validation.model_validator \
+            --model-version "$MODEL_VERSION" \
+            --min-f1 0.90 \
+            --min-accuracy 0.90 \
+            --max-latency-ms 100
+
+      - name: Promote model to Production
+        if: success()
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MODEL_VERSION: ${{ github.event.inputs.model_version }}
+        run: |
+          uv run python -c "
+          import mlflow
+          client = mlflow.tracking.MlflowClient()
+          client.transition_model_version_stage(
+              name='areteusml',
+              version='$MODEL_VERSION',
+              stage='Production',
+              archive_existing_versions=True,
+          )
+          print(f'Model version $MODEL_VERSION promoted to Production')
+          "
