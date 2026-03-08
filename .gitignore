@@ -1,0 +1,85 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.production
+
+# ML artifacts
+ml/data/raw/
+ml/data/processed/
+ml/models/
+ml/explainability/outputs/
+artifacts/
+*.onnx
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.pkl
+mlruns/
+mlartifacts/
+
+# DVC
+/ml/data/raw/*.csv
+/ml/data/raw/*.parquet
+/ml/data/processed/*.csv
+/ml/data/processed/*.parquet
+
+# Monitoring reports
+monitoring/reports/*.html
+monitoring/reports/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Coverage
+htmlcov/
+.coverage
+coverage.xml
+
+# Streamlit
+dashboard/.streamlit/secrets.toml
+
+# Infrastructure data
+infrastructure/postgres-data/
+infrastructure/redis-data/
+infrastructure/mlflow-data/
+infrastructure/grafana-data/
+infrastructure/prometheus-data/
+
+# Ruff/Pytest cache
+.ruff_cache/
+.pytest_cache/
+
+# Claude
+CLAUDE_PROMPT.txt
+.claude/
+/data
+/artifacts

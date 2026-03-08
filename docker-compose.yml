@@ -1,0 +1,74 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Override defaults for container networking
+      REDIS_HOST: redis
+      # Disable Postgres - app falls back to SQLite
+      POSTGRES_HOST: ""
+      MLFLOW_TRACKING_URI: ""
+    volumes:
+      - ./ml/models:/app/ml/models:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+    shm_size: "2g"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; r = httpx.get('http://localhost:8000/health'); r.raise_for_status()"]
+      interval: 15s
+      timeout: 10s
+      start_period: 30s
+      retries: 5
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: dashboard/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://api:8000
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+      - ./ml/explainability/outputs:/app/ml/explainability/outputs:ro
+    depends_on:
+      api:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      api:
+        condition: service_healthy
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/api_dashboard.json
+    volumes:
+      - ./infrastructure/grafana/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml:ro
+      - ./infrastructure/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./infrastructure/grafana/provisioning/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+    depends_on:
+      - prometheus

@@ -1,0 +1,202 @@
+/* AreteusML Dashboard - Custom Styling */
+
+/* Global overrides */
+.stApp {
+    background-color: #0D1117;
+}
+
+/* Header styling */
+header[data-testid="stHeader"] {
+    background-color: #0D1117;
+    border-bottom: 1px solid #21262D;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #1A1D23;
+    border-right: 1px solid #21262D;
+}
+
+section[data-testid="stSidebar"] .stRadio label {
+    color: #FAFAFA;
+    font-weight: 500;
+}
+
+/* Metric cards */
+div[data-testid="stMetric"] {
+    background-color: #1A1D23;
+    border: 1px solid #21262D;
+    border-radius: 8px;
+    padding: 16px;
+    transition: border-color 0.2s ease;
+}
+
+div[data-testid="stMetric"]:hover {
+    border-color: #4FC3F7;
+}
+
+div[data-testid="stMetric"] label {
+    color: #8B949E;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+    color: #FAFAFA;
+    font-weight: 700;
+}
+
+div[data-testid="stMetric"] [data-testid="stMetricDelta"] {
+    font-size: 0.8rem;
+}
+
+/* Tables */
+div[data-testid="stDataFrame"] {
+    border: 1px solid #21262D;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+div[data-testid="stDataFrame"] table {
+    border-collapse: collapse;
+}
+
+div[data-testid="stDataFrame"] th {
+    background-color: #1A1D23;
+    color: #8B949E;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #21262D;
+}
+
+div[data-testid="stDataFrame"] td {
+    border-bottom: 1px solid #21262D;
+    color: #FAFAFA;
+}
+
+/* Confidence bar styling */
+.confidence-bar {
+    height: 24px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    background-color: #21262D;
+}
+
+.confidence-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.confidence-high {
+    background: linear-gradient(90deg, #2EA043, #3FB950);
+}
+
+.confidence-medium {
+    background: linear-gradient(90deg, #D29922, #E3B341);
+}
+
+.confidence-low {
+    background: linear-gradient(90deg, #DA3633, #F85149);
+}
+
+.confidence-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #FAFAFA;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Buttons */
+.stButton > button {
+    background-color: #1A1D23;
+    border: 1px solid #21262D;
+    color: #FAFAFA;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.stButton > button:hover {
+    border-color: #4FC3F7;
+    color: #4FC3F7;
+}
+
+.stButton > button[kind="primary"] {
+    background-color: #4FC3F7;
+    border-color: #4FC3F7;
+    color: #0D1117;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background-color: #81D4FA;
+    border-color: #81D4FA;
+}
+
+/* Text input */
+.stTextArea textarea, .stTextInput input {
+    background-color: #1A1D23;
+    border: 1px solid #21262D;
+    border-radius: 6px;
+    color: #FAFAFA;
+}
+
+.stTextArea textarea:focus, .stTextInput input:focus {
+    border-color: #4FC3F7;
+    box-shadow: 0 0 0 1px #4FC3F7;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 0;
+    border-bottom: 1px solid #21262D;
+}
+
+.stTabs [data-baseweb="tab"] {
+    color: #8B949E;
+    border-bottom: 2px solid transparent;
+    padding: 8px 16px;
+}
+
+.stTabs [aria-selected="true"] {
+    color: #4FC3F7;
+    border-bottom-color: #4FC3F7;
+}
+
+/* Dividers */
+hr {
+    border-color: #21262D;
+}
+
+/* Status indicators */
+.status-healthy {
+    color: #3FB950;
+    font-weight: 600;
+}
+
+.status-warning {
+    color: #E3B341;
+    font-weight: 600;
+}
+
+.status-critical {
+    color: #F85149;
+    font-weight: 600;
+}
+
+/* Card container */
+.card {
+    background-color: #1A1D23;
+    border: 1px solid #21262D;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+}

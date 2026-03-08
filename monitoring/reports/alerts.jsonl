@@ -1,0 +1,1 @@
+{"type": "confidence_drop", "severity": "warning", "message": "Mean confidence 0.195 below threshold 0.7.", "value": 0.1948, "threshold": 0.7, "timestamp": "2026-03-08T00:32:56.289378+00:00"}

@@ -1,0 +1,27 @@
+# Model files are volume-mounted at runtime, not baked into the image.
+# Excluding them keeps the build context small (~50MB vs ~750MB).
+ml/models/production/
+ml/models/onnx/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.ruff_cache/
+
+# Data
+ml/data/raw/
+ml/data/processed/
+ml/data/splits/
+
+# Dev/CI
+.git/
+.github/
+.dvc/
+.env
+*.pdf
+docs/
+ml/notebooks/
+monitoring/workspace/
+node_modules/
