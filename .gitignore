@@ -67,6 +67,9 @@ coverage.xml
 # Streamlit
 dashboard/.streamlit/secrets.toml
 
+# Dagster temp
+.tmp_dagster_home_*/
+
 # Infrastructure data
 infrastructure/postgres-data/
 infrastructure/redis-data/
