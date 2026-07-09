@@ -19,6 +19,10 @@ pytestmark = pytest.mark.integration
 @pytest.fixture(scope="module")
 def client():
     with httpx.Client(base_url=BASE_URL, timeout=30.0) as c:
+        try:
+            c.get("/health")
+        except httpx.HTTPError:
+            pytest.skip(f"No API server reachable at {BASE_URL}; skipping integration tests")
         yield c
 
 
