@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Tests](https://img.shields.io/badge/Tests-86%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-91%20passing-brightgreen)
 
 Production ML pipeline for Banking77 intent classification -- from data validation through ONNX-optimized serving. Fine-tunes ModernBERT-base on 77 banking intent classes (13,083 samples) with class-weighted loss, exports to ONNX INT8 for sub-10ms CPU inference, and serves predictions through a FastAPI REST API.
 
@@ -62,6 +62,9 @@ areteusml/
 ├── infrastructure/      # Prometheus, Grafana configs
 ├── artifacts/           # Training metrics, plots, confusion matrices
 ├── notebooks/           # EDA and analysis notebooks
+├── scripts/             # Drift reports, prediction generation, run_all
+├── docs/                # Project walkthrough and decision records
+├── Makefile             # install, dev, lint, test, train, serve, docker targets
 ├── docker-compose.yml   # Full stack: API, Redis, Dashboard, Prometheus, Grafana
 └── pyproject.toml
 ```
@@ -97,7 +100,7 @@ Trains SVM, Logistic Regression, and Random Forest with TF-IDF features. Results
 python -m ml.training.train
 ```
 
-Fine-tunes `answerdotai/ModernBERT-base` with class-weighted cross-entropy loss. Requires a CUDA GPU with 16GB+ VRAM (trained on Kaggle T4 free tier). Model saved to `ml/models/production/`, metrics to `artifacts/modernbert/`.
+Fine-tunes `answerdotai/ModernBERT-base` with class-weighted cross-entropy loss. Runs on a CUDA GPU with as little as 6GB VRAM thanks to gradient checkpointing, a batch size of 2 with gradient accumulation, and the memory-efficient Adafactor optimizer (trained on the Kaggle T4 free tier); more VRAM just lets you raise the batch size and train faster. Model saved to `ml/models/production/`, metrics to `artifacts/modernbert/`.
 
 ### Export to ONNX
 
@@ -186,7 +189,7 @@ docker compose up --build
 | Learning rate | 2e-5 |
 | Epochs | 10 (with early stopping) |
 | Early stopping patience | 3 |
-| Optimizer | AdamW |
+| Optimizer | Adafactor |
 | Weight decay | 0.01 |
 | Warmup ratio | 0.1 |
 | FP16 training | Yes |
@@ -230,4 +233,4 @@ The INT8 quantized model is used in production serving. Accuracy degradation fro
 | Data Versioning | DVC |
 | Containerization | Docker, Docker Compose |
 | Linting | Ruff |
-| Testing | pytest (86 tests) |
+| Testing | pytest (91 tests) |
