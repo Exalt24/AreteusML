@@ -1,6 +1,6 @@
 """Tests for data loading and splitting pipeline."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -21,24 +21,20 @@ def banking77_df():
 class TestLoadBanking77:
     def test_load_banking77(self):
         """Test load_banking77 returns DataFrame with correct columns."""
-        mock_dataset = {
-            "train": MagicMock(),
-            "test": MagicMock(),
-        }
-        mock_dataset["train"].to_pandas.return_value = pd.DataFrame(
+        train_df = pd.DataFrame(
             {
                 "text": ["query 1", "query 2"],
                 "label": [0, 1],
             }
         )
-        mock_dataset["test"].to_pandas.return_value = pd.DataFrame(
+        test_df = pd.DataFrame(
             {
                 "text": ["query 3"],
                 "label": [2],
             }
         )
 
-        with patch("ml.data.load_data.load_dataset", return_value=mock_dataset):
+        with patch("ml.data.load_data.pd.read_parquet", side_effect=[train_df, test_df]):
             from ml.data.load_data import load_banking77
 
             df = load_banking77()
