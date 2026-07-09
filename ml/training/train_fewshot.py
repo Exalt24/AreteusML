@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import datasets
 import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
@@ -16,8 +17,6 @@ from loguru import logger
 from setfit import SetFitModel
 from setfit import Trainer as SetFitTrainer
 from setfit import TrainingArguments as SetFitArgs
-
-import datasets
 
 from ml.training.evaluate import compute_metrics, log_metrics_to_mlflow
 from ml.utils.reproducibility import SEED, set_seed
@@ -38,6 +37,7 @@ SHOT_COUNTS = [2, 4, 8, 16, 32]
 def load_label_names() -> list[str]:
     """Return Banking77 canonical label names."""
     from ml.training.train import LABEL_NAMES
+
     return LABEL_NAMES
 
 

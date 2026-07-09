@@ -32,8 +32,17 @@ SERVICES = {
         "port": 8000,
     },
     "streamlit": {
-        "cmd": [sys.executable, "-m", "streamlit", "run", "dashboard/app.py",
-                "--server.port", "8501", "--server.headless", "true"],
+        "cmd": [
+            sys.executable,
+            "-m",
+            "streamlit",
+            "run",
+            "dashboard/app.py",
+            "--server.port",
+            "8501",
+            "--server.headless",
+            "true",
+        ],
         "url": "http://localhost:8501",
         "label": "Streamlit Dashboard",
         "port": 8501,
@@ -143,8 +152,13 @@ def handle_signal(*_):
 
 def main():
     parser = argparse.ArgumentParser(description="Launch all AreteusML services")
-    parser.add_argument("command", nargs="?", default="start", choices=["start", "stop"],
-                        help="'start' (default) or 'stop' to kill a previous run")
+    parser.add_argument(
+        "command",
+        nargs="?",
+        default="start",
+        choices=["start", "stop"],
+        help="'start' (default) or 'stop' to kill a previous run",
+    )
     parser.add_argument("--no-dagster", action="store_true", help="Skip Dagster")
     parser.add_argument("--no-mlflow", action="store_true", help="Skip MLflow UI")
     args = parser.parse_args()
@@ -170,7 +184,7 @@ def main():
         for name, port in blocked:
             print(f"  :{port} ({SERVICES[name]['label']})")
         if PID_FILE.exists():
-            print(f"\nTry: python scripts/run_all.py stop")
+            print("\nTry: python scripts/run_all.py stop")
         else:
             print("\nFind and kill the processes using those ports.")
         sys.exit(1)
@@ -180,6 +194,7 @@ def main():
 
     # Clean up corrupted MLflow metrics from any previous interrupted runs
     from ml.utils.reproducibility import cleanup_mlflow_nulls
+
     cleaned = cleanup_mlflow_nulls(str(PROJECT_ROOT / "mlruns"))
     if cleaned:
         print(f"  Cleaned {cleaned} corrupted MLflow metric file(s) from a previous interrupted run\n")

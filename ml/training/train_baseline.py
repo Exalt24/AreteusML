@@ -6,9 +6,8 @@ Run with:
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pickle
+from pathlib import Path
 
 import mlflow
 import pandas as pd

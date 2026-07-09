@@ -84,7 +84,11 @@ labeling = [
 ]
 
 [tool.uv]
-environments = ["sys_platform == 'win32'"]
+environments = [
+    "sys_platform == 'linux'",
+    "sys_platform == 'darwin'",
+    "sys_platform == 'win32'",
+]
 
 [[tool.uv.index]]
 name = "pytorch-cu126"
@@ -134,6 +138,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "ml/notebooks/*" = ["T20", "E402"]
+"notebooks/*" = ["T20", "E402", "S603", "S607"]
+"scripts/*" = ["T20", "E402", "S603", "S607"]
 "backend/tests/*" = ["S101", "S106"]
 "ml/tests/*" = ["S101"]
 "ml/utils/reproducibility.py" = ["T20"]

@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: uv sync --dev
+        run: uv sync --extra dev
 
       - name: Run model validation tests
         run: uv run pytest ml/tests/ -m "not slow and not gpu" -v

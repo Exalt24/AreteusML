@@ -8,7 +8,9 @@ from sklearn.model_selection import train_test_split
 
 from ml.utils.reproducibility import SEED, set_seed
 
-TRAIN_URL = "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet"
+TRAIN_URL = (
+    "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet"
+)
 TEST_URL = "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/test/0000.parquet"
 
 PROCESSED_DIR = Path(__file__).resolve().parent / "processed"

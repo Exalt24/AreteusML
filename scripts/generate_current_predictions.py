@@ -51,7 +51,7 @@ def main():
     print(f"\nSaved {len(current)} predictions to {output_path}")
     print("\nSummary:")
     print(f"  Mean confidence: {current['confidence'].mean():.4f}")
-    print(f"  Labels changed:  {n_noisy} ({n_noisy/len(current)*100:.1f}%)")
+    print(f"  Labels changed:  {n_noisy} ({n_noisy / len(current) * 100:.1f}%)")
 
 
 if __name__ == "__main__":
