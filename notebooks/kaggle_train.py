@@ -12,7 +12,10 @@ Setup:
 
 # ---- Cell 1: Install dependencies ----
 import subprocess
-subprocess.run(["pip", "install", "-q", "transformers", "accelerate", "scikit-learn", "pandas", "matplotlib"], check=True)
+
+subprocess.run(
+    ["pip", "install", "-q", "transformers", "accelerate", "scikit-learn", "pandas", "matplotlib"], check=True
+)
 
 # ---- Cell 2: Imports ----
 import gc
@@ -55,6 +58,7 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
 # ---- Reproducibility ----
 import random
+
 random.seed(SEED)
 os.environ["PYTHONHASHSEED"] = str(SEED)
 np.random.seed(SEED)
@@ -69,6 +73,7 @@ if torch.cuda.is_available():
 else:
     print("WARNING: No GPU detected! Enable GPU in Kaggle settings.")
 
+
 # ---- Dataset class ----
 class Banking77Dataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
@@ -82,6 +87,7 @@ class Banking77Dataset(torch.utils.data.Dataset):
         item = {k: v[idx] for k, v in self.encodings.items()}
         item["labels"] = self.labels[idx]
         return item
+
 
 # ---- Weighted Trainer ----
 class WeightedTrainer(Trainer):
@@ -99,9 +105,12 @@ class WeightedTrainer(Trainer):
         loss = self._loss_fn(logits, labels)
         return (loss, outputs) if return_outputs else loss
 
+
 # ---- Load data ----
 print("Loading Banking77 dataset from HF parquet export...")
-train_url = "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet"
+train_url = (
+    "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet"
+)
 test_url = "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/test/0000.parquet"
 
 hf_train = pd.read_parquet(train_url)
@@ -111,34 +120,82 @@ print(f"Total samples: {len(full_df)}")
 
 # Get label names from the data
 label_names = [
-    "activate_my_card", "age_limit", "apple_pay_or_google_pay", "atm_support",
-    "automatic_top_up", "balance_not_updated_after_bank_transfer",
-    "balance_not_updated_after_cheque_or_cash_deposit", "beneficiary_not_allowed",
-    "cancel_transfer", "card_about_to_expire", "card_acceptance",
-    "card_arrival", "card_delivery_estimate", "card_linking",
-    "card_not_working", "card_payment_fee_charged",
-    "card_payment_not_recognised", "card_payment_wrong_exchange_rate",
-    "card_swallowed", "cash_withdrawal_charge", "cash_withdrawal_not_recognised",
-    "change_pin", "compromised_card", "contactless_not_working",
-    "country_support", "declined_card_payment", "declined_cash_withdrawal",
-    "declined_transfer", "direct_debit_payment_not_recognised",
-    "disposable_card_limits", "edit_personal_details",
-    "exchange_charge", "exchange_rate", "exchange_via_app",
-    "extra_charge_on_statement", "failed_transfer", "fiat_currency_support",
-    "get_disposable_virtual_card", "get_physical_card", "getting_spare_card",
-    "getting_virtual_card", "lost_or_stolen_card", "lost_or_stolen_phone",
-    "order_physical_card", "passcode_forgotten", "pending_card_payment",
-    "pending_cash_withdrawal", "pending_top_up", "pending_transfer",
-    "pin_blocked", "receiving_money", "Refund_not_showing_up",
-    "request_refund", "reverted_card_payment?", "supported_cards_and_currencies",
-    "terminate_account", "top_up_by_bank_transfer_charge",
-    "top_up_by_card_charge", "top_up_by_cash_or_cheque", "top_up_failed",
-    "top_up_limits", "top_up_reverted", "topping_up_by_card",
-    "transaction_charged_twice", "transfer_fee_charged",
-    "transfer_into_account", "transfer_not_received_by_recipient",
-    "transfer_timing", "unable_to_verify_identity", "verify_my_identity",
-    "verify_source_of_funds", "verify_top_up", "virtual_card_not_working",
-    "visa_or_mastercard", "why_verify_identity", "wrong_amount_of_cash_received",
+    "activate_my_card",
+    "age_limit",
+    "apple_pay_or_google_pay",
+    "atm_support",
+    "automatic_top_up",
+    "balance_not_updated_after_bank_transfer",
+    "balance_not_updated_after_cheque_or_cash_deposit",
+    "beneficiary_not_allowed",
+    "cancel_transfer",
+    "card_about_to_expire",
+    "card_acceptance",
+    "card_arrival",
+    "card_delivery_estimate",
+    "card_linking",
+    "card_not_working",
+    "card_payment_fee_charged",
+    "card_payment_not_recognised",
+    "card_payment_wrong_exchange_rate",
+    "card_swallowed",
+    "cash_withdrawal_charge",
+    "cash_withdrawal_not_recognised",
+    "change_pin",
+    "compromised_card",
+    "contactless_not_working",
+    "country_support",
+    "declined_card_payment",
+    "declined_cash_withdrawal",
+    "declined_transfer",
+    "direct_debit_payment_not_recognised",
+    "disposable_card_limits",
+    "edit_personal_details",
+    "exchange_charge",
+    "exchange_rate",
+    "exchange_via_app",
+    "extra_charge_on_statement",
+    "failed_transfer",
+    "fiat_currency_support",
+    "get_disposable_virtual_card",
+    "get_physical_card",
+    "getting_spare_card",
+    "getting_virtual_card",
+    "lost_or_stolen_card",
+    "lost_or_stolen_phone",
+    "order_physical_card",
+    "passcode_forgotten",
+    "pending_card_payment",
+    "pending_cash_withdrawal",
+    "pending_top_up",
+    "pending_transfer",
+    "pin_blocked",
+    "receiving_money",
+    "Refund_not_showing_up",
+    "request_refund",
+    "reverted_card_payment?",
+    "supported_cards_and_currencies",
+    "terminate_account",
+    "top_up_by_bank_transfer_charge",
+    "top_up_by_card_charge",
+    "top_up_by_cash_or_cheque",
+    "top_up_failed",
+    "top_up_limits",
+    "top_up_reverted",
+    "topping_up_by_card",
+    "transaction_charged_twice",
+    "transfer_fee_charged",
+    "transfer_into_account",
+    "transfer_not_received_by_recipient",
+    "transfer_timing",
+    "unable_to_verify_identity",
+    "verify_my_identity",
+    "verify_source_of_funds",
+    "verify_top_up",
+    "virtual_card_not_working",
+    "visa_or_mastercard",
+    "why_verify_identity",
+    "wrong_amount_of_cash_received",
     "wrong_exchange_rate_for_cash_withdrawal",
 ]
 num_labels = len(label_names)
@@ -183,6 +240,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
     MODEL_NAME, num_labels=num_labels, id2label=id2label, label2id=label2id
 )
 
+
 # ---- Metrics ----
 def compute_metrics_fn(eval_pred):
     logits, labels = eval_pred
@@ -194,6 +252,7 @@ def compute_metrics_fn(eval_pred):
         "precision_macro": precision_score(labels, preds, average="macro", zero_division=0),
         "recall_macro": recall_score(labels, preds, average="macro", zero_division=0),
     }
+
 
 # ---- Training args (optimized for T4 16GB) ----
 training_args = TrainingArguments(
@@ -271,15 +330,15 @@ test_f1_weighted = f1_score(y_true, y_pred, average="weighted", zero_division=0)
 test_precision = precision_score(y_true, y_pred, average="macro", zero_division=0)
 test_recall = recall_score(y_true, y_pred, average="macro", zero_division=0)
 
-print(f"\n{'='*50}")
-print(f"TEST RESULTS")
-print(f"{'='*50}")
+print(f"\n{'=' * 50}")
+print("TEST RESULTS")
+print(f"{'=' * 50}")
 print(f"Accuracy:         {test_acc:.4f}")
 print(f"F1 (macro):       {test_f1_macro:.4f}")
 print(f"F1 (weighted):    {test_f1_weighted:.4f}")
 print(f"Precision (macro): {test_precision:.4f}")
 print(f"Recall (macro):   {test_recall:.4f}")
-print(f"{'='*50}\n")
+print(f"{'=' * 50}\n")
 
 # Save metrics JSON
 metrics = {
@@ -331,13 +390,13 @@ if CHECKPOINT_DIR.exists():
     print("Cleaned up checkpoints")
 
 # ---- Summary ----
-print(f"\n{'='*50}")
+print(f"\n{'=' * 50}")
 print(f"All artifacts saved to {OUTPUT_DIR}/")
-print(f"Files:")
+print("Files:")
 for f in sorted(OUTPUT_DIR.rglob("*")):
     if f.is_file():
         size_mb = f.stat().st_size / 1024**2
         print(f"  {f.relative_to(OUTPUT_DIR)} ({size_mb:.1f} MB)")
-print(f"{'='*50}")
-print(f"\nDownload the 'model/' folder and place it at:")
-print(f"  AreteusML/ml/models/production/")
+print(f"{'=' * 50}")
+print("\nDownload the 'model/' folder and place it at:")
+print("  AreteusML/ml/models/production/")

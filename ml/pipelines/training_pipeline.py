@@ -80,8 +80,12 @@ def _random_swap(text: str, n: int = 1) -> str:
 def raw_data(context: AssetExecutionContext, model_paths: ModelPathResource) -> pd.DataFrame:
     """Load Banking77 dataset and save as parquet."""
     logger.info("Loading Banking77 dataset from HuggingFace parquet export")
-    train_url = "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet"
-    test_url = "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/test/0000.parquet"
+    train_url = (
+        "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet"
+    )
+    test_url = (
+        "https://huggingface.co/datasets/PolyAI/banking77/resolve/refs%2Fconvert%2Fparquet/default/test/0000.parquet"
+    )
     train_df = pd.read_parquet(train_url)
     test_df = pd.read_parquet(test_url)
 

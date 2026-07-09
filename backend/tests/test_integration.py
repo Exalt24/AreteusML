@@ -51,9 +51,7 @@ def test_predict_batch(client: httpx.Client):
 
 def test_feedback(client: httpx.Client):
     # First make a prediction to get a prediction_id
-    pred_response = client.post(
-        "/predict", json={"text": "I want to check my balance"}
-    )
+    pred_response = client.post("/predict", json={"text": "I want to check my balance"})
     assert pred_response.status_code == 200
     prediction_id = pred_response.json()["prediction_id"]
 

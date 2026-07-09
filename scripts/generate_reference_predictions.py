@@ -62,12 +62,14 @@ def main():
         if (i // batch_size) % 10 == 0:
             print(f"  Processed {min(i + batch_size, len(texts))}/{len(texts)}")
 
-    result = pd.DataFrame({
-        "text": texts,
-        "predicted_label": all_preds,
-        "predicted_label_name": [LABEL_NAMES[p] for p in all_preds],
-        "confidence": all_confs,
-    })
+    result = pd.DataFrame(
+        {
+            "text": texts,
+            "predicted_label": all_preds,
+            "predicted_label_name": [LABEL_NAMES[p] for p in all_preds],
+            "confidence": all_confs,
+        }
+    )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     result.to_parquet(output_path, index=False)

@@ -10,6 +10,7 @@ import gc
 import time
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
 import pandas as pd
@@ -23,8 +24,6 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
-
-import matplotlib.pyplot as plt
 
 from ml.training.evaluate import (
     compute_metrics,

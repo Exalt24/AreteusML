@@ -41,6 +41,7 @@ N_TRIALS = 20
 # ---------------------------------------------------------------------------
 def load_label_names() -> list[str]:
     from ml.training.train import LABEL_NAMES
+
     return LABEL_NAMES
 
 

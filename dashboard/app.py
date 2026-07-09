@@ -123,12 +123,26 @@ def page_overview() -> None:
             fig = go.Figure()
             if "loss" in history.columns:
                 train_loss = history.dropna(subset=["loss"])
-                fig.add_trace(go.Scatter(x=train_loss["epoch"], y=train_loss["loss"],
-                                         mode="lines", name="Train Loss", line=dict(color="#4FC3F7")))
+                fig.add_trace(
+                    go.Scatter(
+                        x=train_loss["epoch"],
+                        y=train_loss["loss"],
+                        mode="lines",
+                        name="Train Loss",
+                        line=dict(color="#4FC3F7"),
+                    )
+                )
             if "eval_loss" in history.columns:
                 eval_loss = history.dropna(subset=["eval_loss"])
-                fig.add_trace(go.Scatter(x=eval_loss["epoch"], y=eval_loss["eval_loss"],
-                                         mode="lines+markers", name="Eval Loss", line=dict(color="#FFB74D")))
+                fig.add_trace(
+                    go.Scatter(
+                        x=eval_loss["epoch"],
+                        y=eval_loss["eval_loss"],
+                        mode="lines+markers",
+                        name="Eval Loss",
+                        line=dict(color="#FFB74D"),
+                    )
+                )
             fig.update_layout(**PLOTLY_LAYOUT, title="Loss", height=350)
             st.plotly_chart(fig, use_container_width=True)
 

@@ -19,6 +19,7 @@ WINDOWS = {
 
 # --- SQLAlchemy models ---
 
+
 class Base(DeclarativeBase):
     pass
 
@@ -51,6 +52,7 @@ def _get_engine():
 
 
 # --- Tracker ---
+
 
 @dataclass
 class PerformanceTracker:
@@ -91,12 +93,14 @@ class PerformanceTracker:
         try:
             engine = _get_engine()
             with Session(engine) as session:
-                session.add(PredictionMetric(
-                    timestamp=ts,
-                    latency_ms=latency_ms,
-                    confidence=confidence,
-                    label=label,
-                ))
+                session.add(
+                    PredictionMetric(
+                        timestamp=ts,
+                        latency_ms=latency_ms,
+                        confidence=confidence,
+                        label=label,
+                    )
+                )
                 session.commit()
         except Exception:
             logger.exception("Failed to write to SQLite, metrics stored in memory only")
