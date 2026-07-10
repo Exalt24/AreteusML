@@ -29,7 +29,7 @@ dependencies = [
     # Experiment Tracking
     "mlflow==2.21.0",
     # Inference
-    "onnx==1.17.0",
+    "onnx>=1.22.0,<2",
     "onnxruntime==1.21.0",
     "optimum==1.25.0",
     # API
@@ -46,13 +46,13 @@ dependencies = [
     "evidently==0.6.7",
     "prometheus-client==0.22.0",
     # Dashboard
-    "streamlit==1.43.2",
+    "streamlit>=1.54.0,<2",
     "streamlit-shadcn-ui==0.1.19",
     "streamlit-elements==0.1.0",
     "plotly>=5.10.0,<6",
     # Orchestration
-    "dagster==1.10.10",
-    "dagster-webserver==1.10.10",
+    "dagster>=1.13.1,<2",
+    "dagster-webserver>=1.13.1,<2",
     # Database
     "sqlalchemy==2.0.38",
     "psycopg2-binary==2.9.10",
