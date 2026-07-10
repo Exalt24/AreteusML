@@ -33,11 +33,11 @@ dependencies = [
     "onnxruntime==1.21.0",
     "optimum==1.25.0",
     # API
-    "fastapi==0.115.11",
+    "fastapi>=0.139.0,<1",
     "uvicorn[standard]==0.34.0",
     "pydantic==2.10.6",
     "pydantic-settings==2.8.1",
-    "python-jose[cryptography]==3.4.0",
+    "python-jose[cryptography]==3.5.0",
     "passlib[bcrypt]==1.7.4",
     "redis==5.2.1",
     "slowapi==0.1.9",
@@ -58,7 +58,7 @@ dependencies = [
     "psycopg2-binary==2.9.10",
     "alembic==1.14.1",
     # Utilities
-    "python-dotenv==1.0.1",
+    "python-dotenv==1.2.2",
     "loguru==0.7.3",
     "rich==13.9.4",
     "typer==0.15.2",
@@ -67,8 +67,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest==8.3.5",
-    "pytest-asyncio==0.25.3",
+    "pytest>=9.0.3,<10",
+    "pytest-asyncio>=1.0.0,<2",
     "pytest-cov==6.0.0",
     "ruff==0.11.0",
     "pre-commit==4.1.0",
