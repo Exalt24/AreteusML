@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Tests](https://img.shields.io/badge/Tests-91%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-91%20collected-blue)
 
 ML pipeline for Banking77 intent classification, from data validation through ONNX-optimized serving. Fine-tunes ModernBERT-base on 77 banking intent classes (13,083 samples) with class-weighted loss, exports to ONNX INT8 for about 10 ms per request on CPU (10.11 ms mean over 100 samples; PyTorch 45.66 ms), and serves predictions through a FastAPI REST API.
 
@@ -206,11 +206,11 @@ docker compose up --build
 
 The trained PyTorch model is exported to ONNX and quantized to INT8 using dynamic quantization via ONNX Runtime.
 
-| Format | Latency (avg, 100 samples) | Speedup |
-|--------|----------------------------|---------|
-| PyTorch FP32 | 45.66ms | 1.0x |
-| ONNX FP32 | 19.86ms | 2.3x |
-| **ONNX INT8** | **10.11ms** | **4.52x** |
+| Format | Model size | Latency (avg, 100 samples) | Speedup |
+|--------|-----------|----------------------------|---------|
+| PyTorch FP32 | 571 MB | 45.66ms | 1.0x |
+| ONNX FP32 | 577 MB | 19.86ms | 2.3x |
+| **ONNX INT8** | **146 MB** | **10.11ms** | **4.52x** |
 
 The API serves the INT8 model. I did not re-score the test split through the INT8 model, so the accuracy and F1 above are for the PyTorch model and the INT8 accuracy is unmeasured.
 
@@ -239,4 +239,5 @@ ONNX export of ModernBERT failed through `optimum` (LayerNorm), so the export ca
 | Data Versioning | DVC |
 | Containerization | Docker, Docker Compose |
 | Linting | Ruff |
-| Testing | pytest (91 tests) |
+| Testing | pytest (91 collected; 86 pass with `-m "not slow and not gpu"`, 5 skipped) |
+| CI | GitHub Actions: ruff, pytest with coverage, pip-audit (no deploy workflow) |
