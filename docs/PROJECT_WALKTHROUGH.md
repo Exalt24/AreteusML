@@ -1,6 +1,6 @@
 # AreteusML - Project Walkthrough
 
-A complete guide to understanding every part of this project, what the graphs mean, and what to say in interviews.
+A complete guide to understanding every part of this project, and what the graphs mean.
 
 ---
 
@@ -17,7 +17,7 @@ A complete guide to understanding every part of this project, what the graphs me
 9. [Phase 6: Explainability](#phase-6-explainability)
 10. [Reading the Dashboard Graphs](#reading-the-dashboard-graphs)
 11. [Results Summary](#results-summary)
-12. [Key Decisions Cheat Sheet](#key-decisions-cheat-sheet)
+12. [Key Decisions](#key-decisions)
 13. [How to Run Everything](#how-to-run-everything)
 
 ---
@@ -26,7 +26,7 @@ A complete guide to understanding every part of this project, what the graphs me
 
 A **text classification system** that takes a customer banking query like "How do I change my PIN?" and classifies it into one of **77 intent categories** (like `change_pin`, `card_arrival`, `lost_or_stolen_card`).
 
-It's not just a model - it's the **full ML pipeline**: data ingestion, validation, training, optimization, serving, monitoring, orchestration, explainability, and a dashboard. This is what production ML looks like.
+It's not just a model - it's the **full ML pipeline**: data ingestion, validation, training, optimization, serving, monitoring, orchestration, explainability, and a dashboard. It covers the same stages a deployed ML system has, run locally.
 
 **Tech stack:** Python, PyTorch, HuggingFace Transformers, ONNX Runtime, FastAPI, Streamlit, Dagster, MLflow, Evidently, SHAP, Plotly, Pandera.
 
@@ -90,35 +90,29 @@ Your laptop has a **6GB RTX 3060** - not enough for ModernBERT training. Here's 
 **1. Adafactor instead of AdamW**
 - AdamW (the standard optimizer) stores 2 extra copies of every parameter for momentum tracking (~3GB for ModernBERT)
 - Adafactor factorizes the second moment into row and column vectors, cutting optimizer memory to ~1.5GB
-- *Interview line: "I chose Adafactor to reduce optimizer memory footprint from ~3GB to ~1.5GB by factorizing the second moment matrix"*
 
 **2. Gradient Checkpointing**
 - Normally, all intermediate activations are stored for the backward pass (uses lots of memory)
 - Gradient checkpointing throws them away and recomputes them during backprop
 - Trades ~30% more compute time for ~60% less memory
-- *Interview line: "Gradient checkpointing trades compute for memory - recomputes activations during backprop instead of storing them"*
 
 **3. Batch Size 2 + Gradient Accumulation 32**
 - Only 2 samples in GPU memory at once (tiny footprint)
 - But gradients are accumulated over 32 mini-batches before updating weights
 - Effective batch size = 2 x 32 = 64 (same as if we had a big GPU)
-- *Interview line: "Effective batch size of 64 through gradient accumulation, but only 2 samples in memory at any time"*
 
 **4. FP16 Mixed Precision**
 - Forward pass uses 16-bit floats (half the memory)
 - Backward pass keeps 32-bit for numerical stability
-- *Interview line: "Mixed precision training halves activation memory with negligible accuracy impact"*
 
 **5. Class-Weighted Cross-Entropy**
 - Banking77 has uneven class sizes (some intents have 30 samples, others have 15)
 - Without weighting, the model would ignore rare classes
 - We built a custom `WeightedTrainer` that inversely weights by class frequency
-- *Interview line: "Custom WeightedTrainer with inverse frequency weighting to prevent the model from ignoring rare intent classes"*
 
 **6. MAX_LENGTH=64**
 - Default BERT uses 512 tokens. Banking77 queries average ~12 words
 - Setting max_length=64 saves huge memory (attention is O(n^2) with sequence length)
-- *Interview line: "Reduced sequence length from 512 to 64 since banking queries are short, cutting attention memory by 64x"*
 
 **Even with all this, 6GB was too tight.** Trained on **Kaggle T4 (16GB VRAM, free tier)** - $0 cost.
 
@@ -155,7 +149,7 @@ How the model improved over 10 epochs:
 
 ## Phase 3: ONNX Optimization
 
-The PyTorch model works but is big and slow. For production, we convert to ONNX (Open Neural Network Exchange).
+The PyTorch model works but is big and slow. For serving, we convert to ONNX (Open Neural Network Exchange).
 
 | Format | Model Size | Latency (per query) | Speedup |
 |--------|-----------|---------------------|---------|
@@ -176,7 +170,7 @@ GPUs cost money. At 10ms per query on CPU, there's no need. If you're serving 10
 ### Technical Gotchas We Solved
 
 - `optimum` library (the standard ONNX exporter) failed on ModernBERT's LayerNorm, so we used direct `torch.onnx.export` with opset 18
-- Had to clear `value_info` before INT8 quantization to fix shape inference errors
+- Had to clear `value_info` on the exported graph before INT8 quantization, because the stale shape entries made ONNX Runtime's shape inference fail
 - Windows needed `PYTHONIOENCODING=utf-8` for ONNX export (emoji in logs crashed it)
 
 ---
@@ -212,7 +206,7 @@ The API that serves predictions:
 ### What We Built
 
 1. **Reference predictions** - ran the model on the entire test set, saved predictions + confidence scores as the "known good" baseline
-2. **Current predictions** - simulated production data with realistic drift:
+2. **Current predictions** - simulated live traffic with realistic drift:
    - 80% random subset (different volume)
    - 5% of labels randomly changed (simulates misclassifications increasing)
    - Confidence reduced by 0-15% (simulates model becoming less sure)
@@ -223,7 +217,7 @@ The API that serves predictions:
    - **Label shift**: is any single class distribution changing dramatically?
 5. **Retrain trigger** - if any alert fires, flag for retraining
 
-### Production Monitoring Integration
+### Monitoring Integration
 
 The monitoring module is wired directly into the API:
 
@@ -351,7 +345,7 @@ Five cards showing test set performance. The key numbers:
 - **Dark diagonal line** = correct predictions (predicted matches true)
 - **Off-diagonal dots** = mistakes (predicted wrong class)
 - **What ours looks like:** Strong dark diagonal with very few off-diagonal dots. This is good - the model gets most classes right
-- **What to look for in interview:** Point to any off-diagonal cluster and say "these two classes get confused because they're semantically similar"
+- **What to look for:** Any off-diagonal cluster is a pair of classes the model confuses because they are semantically similar
 
 **Per-Class Table:**
 - Every row is one of 77 classes with precision, recall, F1-score, and support (number of test samples)
@@ -364,7 +358,7 @@ Five cards showing test set performance. The key numbers:
 **Bar Charts:**
 - Left chart: Accuracy comparison. All 4 bars. ModernBERT's bar should be clearly taller.
 - Right chart: F1 Macro comparison. Same pattern.
-- **What to say:** "SVM is a strong baseline at 87.9%, but ModernBERT pushes 3.4% higher because it understands semantic similarity between intents that bag-of-words can't capture."
+- **Reading it:** SVM is a strong baseline at 87.9%, and ModernBERT is 3.4 points higher, which fits it picking up similarity between intents that bag-of-words cannot.
 
 **Confusion Matrix Tabs:** Click through each model's confusion matrix. Notice how the baseline models have more off-diagonal noise (more mistakes) compared to ModernBERT.
 
@@ -416,14 +410,14 @@ Type any banking query and hit Predict:
 - Random guess on 77 classes = 1.3% accuracy. We're at 91.3%.
 - Original Banking77 paper: ~93% with RoBERTa-large (a bigger, slower model). We're 1.7% behind with a smaller, faster model.
 - 3.4% improvement over SVM justifies the deep learning complexity.
-- 10ms CPU inference means no GPU costs in production.
-- The full pipeline (data -> serving -> monitoring) is what separates "I trained a model" from "I built a production ML system."
+- 10ms CPU inference means no GPU is needed to serve it.
+- The full pipeline (data -> serving -> monitoring) is what separates a trained model from a working ML service.
 
 ---
 
-## Key Decisions Cheat Sheet
+## Key Decisions
 
-Quick reference for interviews - "why did you choose X over Y?"
+Why each tool was chosen over its alternatives.
 
 | Decision | Chose | Over | Why |
 |----------|-------|------|-----|
@@ -484,15 +478,3 @@ uv run python scripts/generate_current_predictions.py
 uv run python scripts/generate_drift_report.py
 uv run python -m ml.explainability.attention_viz
 ```
-
-### Interview Demo Flow (2 minutes)
-
-1. Run `python scripts/run_all.py`
-2. Open **Streamlit** (localhost:8501)
-   - Overview: "91.3% accuracy on 77 classes, here are the training curves"
-   - Model Comparison: "3.4% over SVM baseline, here's why deep learning was worth it"
-   - Inference: Type a query, show real-time prediction at 10ms
-   - Explainability: "The model focuses on intent-defining words, not filler"
-3. Open **Dagster** (localhost:3000): "Full pipeline from data ingestion to monitoring"
-4. Open **MLflow** (localhost:5000): "Every experiment tracked with metrics"
-5. Close: "Built for $0 on Kaggle, serves on CPU at 10ms, full production pipeline"

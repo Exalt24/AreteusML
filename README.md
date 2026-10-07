@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Tests](https://img.shields.io/badge/Tests-91%20passing-brightgreen)
 
-Production ML pipeline for Banking77 intent classification -- from data validation through ONNX-optimized serving. Fine-tunes ModernBERT-base on 77 banking intent classes (13,083 samples) with class-weighted loss, exports to ONNX INT8 for sub-10ms CPU inference, and serves predictions through a FastAPI REST API.
+ML pipeline for Banking77 intent classification, from data validation through ONNX-optimized serving. Fine-tunes ModernBERT-base on 77 banking intent classes (13,083 samples) with class-weighted loss, exports to ONNX INT8 for about 10 ms per request on CPU (10.11 ms mean over 100 samples; PyTorch 45.66 ms), and serves predictions through a FastAPI REST API.
 
 ## Key Results
 
@@ -12,7 +12,7 @@ Production ML pipeline for Banking77 intent classification -- from data validati
 |-------|----------|----------|-------------------|
 | **ModernBERT-base (fine-tuned)** | **91.3%** | **91.4%** | 45.66ms (PyTorch) |
 | ONNX FP32 | -- | -- | 19.86ms (2.3x faster) |
-| **ONNX INT8 (production)** | -- | -- | **10.11ms (4.52x faster)** |
+| **ONNX INT8 (served)** | -- | -- | **10.11ms (4.52x faster)** |
 | SVM baseline | 87.9% | -- | -- |
 | Logistic Regression baseline | 84.5% | -- | -- |
 | Random Forest baseline | 83.9% | -- | -- |
@@ -212,7 +212,13 @@ The trained PyTorch model is exported to ONNX and quantized to INT8 using dynami
 | ONNX FP32 | 19.86ms | 2.3x |
 | **ONNX INT8** | **10.11ms** | **4.52x** |
 
-The INT8 quantized model is used in production serving. Accuracy degradation from quantization is negligible for this task.
+The API serves the INT8 model. I did not re-score the test split through the INT8 model, so the accuracy and F1 above are for the PyTorch model and the INT8 accuracy is unmeasured.
+
+The latencies are CPU wall-clock means over 100 test-split texts, one request at a time, measured once on one machine. `python -m ml.training.export_onnx` re-runs the export and the benchmark and writes `ml/models/onnx/benchmark_results.json`. It needs the fine-tuned model in `ml/models/production/`, which `python -m ml.training.train` produces. The `artifacts/` and `data/` folders are tracked with DVC, but the DVC remote is a local folder on my own machine, so `dvc pull` only works there.
+
+### What broke
+
+ONNX export of ModernBERT failed through `optimum` (LayerNorm), so the export calls `torch.onnx.export` directly with opset 18. INT8 quantization then failed on the exported graph until I cleared its `value_info` entries, because the stale shape information broke shape inference. Details are in `docs/PROJECT_WALKTHROUGH.md`.
 
 ## Tech Stack
 
