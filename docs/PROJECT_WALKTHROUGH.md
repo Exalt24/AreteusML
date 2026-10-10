@@ -447,7 +447,7 @@ This starts 5 services: API (8000), Dashboard (8501), Redis (6379), Prometheus (
 
 ### One Command (without Docker)
 
-```bash
+cd AreteusML
 cd "C:\Projects\Professional\Portfolio Projects\AreteusML"
 uv run python scripts/run_all.py
 ```

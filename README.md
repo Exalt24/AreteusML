@@ -17,6 +17,8 @@ ML pipeline for Banking77 intent classification, from data validation through ON
 | Logistic Regression baseline | 84.5% | -- | -- |
 | Random Forest baseline | 83.9% | -- | -- |
 
+*These are numbers I recorded from my own training and benchmark runs. The trained weights and the benchmark output file are not in the repo (`ml/models/` is gitignored), so a fresh clone does not reproduce them until you run training yourself. See "ONNX Export and Benchmarks" for what is and is not re-runnable.*
+
 ## Architecture
 
 ```mermaid
