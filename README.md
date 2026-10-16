@@ -6,6 +6,10 @@
 
 ML pipeline for Banking77 intent classification, from data validation through ONNX-optimized serving. Fine-tunes ModernBERT-base on 77 banking intent classes (13,083 samples) with class-weighted loss, exports to ONNX INT8 for about 10 ms per request on CPU (10.11 ms mean over 100 samples; PyTorch 45.66 ms), and serves predictions through a FastAPI REST API.
 
+![terminal: pytest on a fresh clone, 86 passed and 5 skipped](docs/demo.gif)
+
+*The test suite on a fresh clone: 86 passed, 5 skipped (the five are integration tests that need a running API). The clip replays the output of one real run. Full-quality clip: [`docs/demo.mp4`](docs/demo.mp4).*
+
 ## Key Results
 
 | Model | Accuracy | F1 Macro | Inference Latency |
