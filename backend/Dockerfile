@@ -1,5 +1,5 @@
 # Stage 1: Builder - install dependencies
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
@@ -21,7 +21,7 @@ RUN sed -i 's/environments = \["sys_platform == .win32."\]/environments = ["sys_
 RUN uv sync --no-dev --no-install-project --inexact
 
 # Stage 2: Runtime - lean image
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 RUN groupadd --gid 1000 app && \
     useradd --uid 1000 --gid app --shell /bin/bash --create-home app
