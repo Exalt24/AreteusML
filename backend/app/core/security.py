@@ -2,9 +2,9 @@
 
 from datetime import UTC, datetime, timedelta
 
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jose import JWTError, jwt
 from loguru import logger
 
 from backend.app.core.config import settings
@@ -25,7 +25,7 @@ def verify_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
         return payload
-    except JWTError as e:
+    except jwt.PyJWTError as e:
         logger.warning(f"Token verification failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -54,7 +54,7 @@ class TestTokenCreation:
 
     def test_token_expiry(self, test_client):
         """Verify token contains exp claim."""
-        from jose import jwt
+        import jwt
 
         from backend.app.core.config import settings
 
