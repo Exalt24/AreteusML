@@ -103,7 +103,7 @@ def plot_attention_heatmap(
 ) -> None:
     """Create a horizontal token-level attention heatmap."""
     n_tokens = len(tokens)
-    fig, ax = plt.subplots(figsize=(max(10, n_tokens * 0.6), 2.5))
+    _fig, ax = plt.subplots(figsize=(max(10, n_tokens * 0.6), 2.5))
 
     attn_2d = attention[:n_tokens].reshape(1, -1)
     im = ax.imshow(attn_2d, cmap="YlOrRd", aspect="auto", vmin=0, vmax=1)

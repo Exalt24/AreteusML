@@ -2,18 +2,18 @@
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 from loguru import logger
 
 
-class AlertSeverity(str, Enum):
+class AlertSeverity(StrEnum):
     WARNING = "warning"
     CRITICAL = "critical"
 
 
-class AlertType(str, Enum):
+class AlertType(StrEnum):
     DRIFT_DETECTED = "drift_detected"
     CONFIDENCE_DROP = "confidence_drop"
     ERROR_RATE_SPIKE = "error_rate_spike"
