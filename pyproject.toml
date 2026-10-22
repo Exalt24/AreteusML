@@ -20,7 +20,7 @@ dependencies = [
     "optuna==4.3.0",
     "shap==0.46.0",
     # Data
-    "pandas==2.2.3",
+    "pandas==3.0.6",
     "numpy==1.26.4",
     "pandera==0.21.1",
     "dvc>=3.59,<4",
