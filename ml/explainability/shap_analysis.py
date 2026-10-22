@@ -151,7 +151,7 @@ def run_shap_analysis(pipeline, X_test: pd.Series, label_names: list[str]) -> No
 def main() -> None:
     """Run SHAP explainability analysis."""
     pipeline = load_pipeline()
-    X_test, y_test, label_names = load_test_data()
+    X_test, _y_test, label_names = load_test_data()
 
     logger.info(f"Test set: {len(X_test)} samples, {len(label_names)} classes")
     run_shap_analysis(pipeline, X_test, label_names)
