@@ -4,8 +4,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
       python-dependencies:
+        update-types: [minor, patch]
         patterns:
           - "*"
   - package-ecosystem: "docker"
@@ -15,15 +18,21 @@ updates:
       - "/infrastructure/mlflow"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
       docker-images:
+        update-types: [minor, patch]
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
+        update-types: [minor, patch]
         patterns:
           - "*"
