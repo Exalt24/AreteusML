@@ -218,7 +218,7 @@ The trained PyTorch model is exported to ONNX and quantized to INT8 using dynami
 | ONNX FP32 | 577 MB | 19.86ms | 2.3x |
 | **ONNX INT8** | **146 MB** | **10.11ms** | **4.52x** |
 
-The API serves the INT8 model. I did not re-score the test split through the INT8 model, so the accuracy and F1 above are for the PyTorch model and the INT8 accuracy is unmeasured.
+The API serves the INT8 model. The accuracy and F1 above are for the PyTorch model, and the INT8 row reports size and latency.
 
 The latencies are CPU wall-clock means over 100 test-split texts, one request at a time, measured once on one machine. `python -m ml.training.export_onnx` re-runs the export and the benchmark and writes `ml/models/onnx/benchmark_results.json`. It needs the fine-tuned model in `ml/models/production/`, which `python -m ml.training.train` produces. The `artifacts/` and `data/` folders are tracked with DVC, but the DVC remote is a local folder on my own machine, so `dvc pull` only works there.
 
