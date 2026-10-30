@@ -73,7 +73,7 @@ dev = [
     "ruff==0.17.2",
     "pre-commit==4.7.0",
     "locust==2.47.0",
-    "ipykernel==6.29.5",
+    "ipykernel==7.4.0",
     "jupyter==1.1.1",
     "matplotlib==3.11.2",
     "seaborn==0.13.2",
