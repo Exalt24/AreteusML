@@ -349,7 +349,7 @@ requires-dist = [
     { name = "sqlalchemy", specifier = "==2.1.6" },
     { name = "streamlit", specifier = ">=1.54.0,<2" },
     { name = "streamlit-elements", specifier = "==0.1.0" },
-    { name = "streamlit-shadcn-ui", specifier = "==0.1.19" },
+    { name = "streamlit-shadcn-ui", specifier = "==1.4.0" },
     { name = "tokenizers", specifier = ">=0.22.0,<0.24" },
     { name = "torch", specifier = ">=2.6.0,<3", index = "https://download.pytorch.org/whl/cu126" },
     { name = "transformers", specifier = ">=5.3.0,<6" },
@@ -5247,29 +5247,15 @@ wheels = [
 ]
 
 [[package]]
-name = "streamlit-extras"
-version = "1.6.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "plotly" },
-    { name = "streamlit" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/52/e2/34510d0639ee4e321c7e92205c990a15957b46aadaab56eef3bc59e15d23/streamlit_extras-1.6.0.tar.gz", hash = "sha256:d75bfabd2be35f1fba6bce3935d1c446cfcfbe03123478df1b5ba4a02a7c49c0", size = 408284, upload-time = "2026-05-15T15:33:22.666Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/85/6a/3cf1af290973094d8104c5ced9e5e5913c90852492419774286550d6c7bc/streamlit_extras-1.6.0-py3-none-any.whl", hash = "sha256:99c38dad3cd07d088da809c97f3e35cd65f97c983480c3115c724f0324fc8eee", size = 1042438, upload-time = "2026-05-15T15:33:24.18Z" },
-]
-
-[[package]]
 name = "streamlit-shadcn-ui"
-version = "0.1.19"
+version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "streamlit" },
-    { name = "streamlit-extras" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/98/44/988e29d4853d0420e7c378393218a92bd897dbb399a7380102f44d821535/streamlit_shadcn_ui-0.1.19.tar.gz", hash = "sha256:70023d343c74a9542180092769ba26841a9248cdfe1a13b2415bfc6710f9b1bd", size = 330491, upload-time = "2025-10-17T18:49:49.827Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/dd/dfd99881fafec55386e12003aaf8710f888a47a3087179fa4618b5b82320/streamlit_shadcn_ui-1.4.0.tar.gz", hash = "sha256:8fc076dc93937927a809ef22a50bc15ec622d9871f32ff1f921c4b4cb014ce1d", size = 460752, upload-time = "2026-09-08T11:14:58.351Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/25/1f5d992affc461a72f339876fbd3a1cde6b96aa3df08405bd3bd758f1f35/streamlit_shadcn_ui-0.1.19-py3-none-any.whl", hash = "sha256:73466ba1cc690794d41f5b67fd271c27ed8f78c6a3437d9df90a5409816299ec", size = 360639, upload-time = "2025-10-17T18:49:47.512Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/3f/786a9145eac955c2c9661e5c118c555d926fb5f0aaadf44e10258f0c248f/streamlit_shadcn_ui-1.4.0-py3-none-any.whl", hash = "sha256:82494a5795a14991ac92e46124271ee859fc50cad7364c7b6bc16b9348ec63df", size = 483201, upload-time = "2026-09-08T11:14:56.659Z" },
 ]
 
 [[package]]
