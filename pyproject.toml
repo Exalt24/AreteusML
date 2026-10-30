@@ -47,7 +47,7 @@ dependencies = [
     "prometheus-client==0.26.0",
     # Dashboard
     "streamlit>=1.54.0,<2",
-    "streamlit-shadcn-ui==0.1.19",
+    "streamlit-shadcn-ui==1.4.0",
     "streamlit-elements==0.1.0",
     "plotly>=5.10.0,<6",
     # Orchestration
